@@ -18,7 +18,9 @@ void gerar();
 
 // ---- Variaváveis Globais ---- //
 
+int codigo_filme;
 int quant_bilhetes;
+int valor_final;
 int valor_bilhetes;
 int horario_sessao;
 int FP;
@@ -69,8 +71,9 @@ void menu() {
 
 void filme1() {
     int ci;
-
     char nome_filme[61] = "A Bela e a Fera";
+    codigo_filme = 1;
+
     system("cls");
 
     printf("================================================\n");
@@ -85,13 +88,13 @@ void filme1() {
     scanf("%d", &ci);
     switch (ci) {
         case 1:
-            comprar(nome_filme);
+            comprar(nome_filme, codigo_filme);
             break;
         case 2:
             menu();
             break;
         default:
-            printf("Opcao invalida!");
+            printf("Opcao invalida!\n");
             getchar();
             break;
     }
@@ -101,8 +104,9 @@ void filme1() {
 
 void filme2() {
     int ci;
-
     char nome_filme[61] = "O Magico de OZ";
+    codigo_filme = 2;
+
     system("cls");
 
     printf("================================================\n");
@@ -117,13 +121,13 @@ void filme2() {
     scanf("%d", &ci);
     switch (ci) {
         case 1:
-            comprar(nome_filme);
+            comprar(nome_filme, codigo_filme);
             break;
         case 2:
             menu();
             break;
         default:
-            printf("Opcao invalida!");
+            printf("Opcao invalida!\n");
             getchar();
             break;
     }
@@ -133,8 +137,9 @@ void filme2() {
 
 void filme3() {
     int ci;
-
     char nome_filme[61] = "Se eu fosse voce 2";
+    codigo_filme = 3;
+
     system("cls");
 
     printf("================================================\n");
@@ -149,13 +154,13 @@ void filme3() {
     scanf("%d", &ci);
     switch (ci) {
         case 1:
-            comprar(nome_filme);
+            comprar(nome_filme, codigo_filme);
             break;
         case 2:
             menu();
             break;
         default:
-            printf("Opcao invalida!");
+            printf("Opcao invalida!\n");
             getchar();
             break;
     }
@@ -163,7 +168,7 @@ void filme3() {
     getchar();
 }
 
-void comprar(nome_filme) {
+void comprar(nome_filme, codigo_filme) {
     int cc;
     int rt;
     int ig;
@@ -183,8 +188,7 @@ void comprar(nome_filme) {
                 valor_bilhetes = valor_meia;
                 break;
             default:
-                printf("Opcao invalida!");
-                getchar();
+                comprar();
                 break;
         }
     printf("Digite a quantidade de ingressos (Ex: 2, 3...):\n");
@@ -200,7 +204,7 @@ void comprar(nome_filme) {
                 menu();
                 break;
             default:
-                printf("Opcao invalida!");
+                printf("Opcao invalida!\n");
                 getchar();
                 break;
         }
@@ -209,12 +213,12 @@ void comprar(nome_filme) {
     {
         printf("================================================\n");
         printf("Selecione a sessao desejada:\n");
-        if (nome_filme == "A Bela e a Fera") {
+        if (codigo_filme == 1) {
             printf("[1] Sessao 1 - Sala 2 15:00 Leg.\n");
             printf("[2] Sessao 2 - Sala 2 16:00 3D Dub.\n");
             printf("[3] Sessao 3 - Sala 3 15:30 Dub.\n");
         }
-        else if (nome_filme == "O Magico de OZ") {
+        else if (codigo_filme == 2) {
             printf("[1] Sessao 1 - Sala 2 14:00 Leg.\n");
             printf("[2] Sessao 2 - Sala 2 15:00 3D Dub.\n");
             printf("[3] Sessao 3 - Sala 3 14:30 Dub.\n");
@@ -242,7 +246,7 @@ void comprar(nome_filme) {
                 menu();
                 break;
             default:
-                printf("Opcao invalida!");
+                printf("Opcao invalida!\n");
                 getchar();
                 break;
         }
@@ -278,7 +282,7 @@ void pagamento(nome_filme){
             imprimir(nome, FP, nome_filme, valor_final);
             break;
         default:
-            printf("Opcao invalida!");
+            printf("Opcao invalida!\n");
             getchar();
             break;
     }
@@ -309,7 +313,7 @@ void imprimir(nome, FP, nome_filme, valor_final) {
             menu();
             break;
         default:
-            printf("Opcao invalida!");
+            printf("Opcao invalida!\n");
             getchar();
             break;
     }
@@ -326,5 +330,20 @@ void gerar(nome, nome_filme, quant_bilhetes, horario_sessao, valor_final) {
     printf("| \tVALOR:  %d\n", valor_final);
     printf("|-------------------------------------->>\n");
 
-    getchar();
+
+    FILE *arq;
+
+    arq = fopen("ingresso.txt", "w");
+    if (arq != NULL)
+    {
+        fprintf(arq, "%s" "%s" "%d" "%d" "%d", nome, nome_filme, quant_bilhetes, horario_sessao, valor_final);
+    }
+    else
+    { 
+        printf("ERRO!\n");
+    }
+
+    fclose(arq);
+
+    getchar(); 
 }
