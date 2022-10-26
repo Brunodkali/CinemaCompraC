@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <locale.h> 
-
+#include <locale.h>
+#define quant_bilhetes_MAX 10
+#define valor_int 20
+#define valor_meia 10
 
 // ---- Funções ---- //
 
@@ -17,6 +19,7 @@ void gerar();
 // ---- Variaváveis Globais ---- //
 
 int quant_bilhetes;
+int valor_bilhetes;
 int horario_sessao;
 int FP;
 char nome[61];
@@ -162,62 +165,98 @@ void filme3() {
 
 void comprar(nome_filme) {
     int cc;
+    int rt;
+    int ig;
+
     system("cls");
 
     printf("Filme: %s\n", nome_filme);
+    printf("Selecione se o ingresso e inteiro ou meia-entrada: \n");
+    printf("[1] Inteiro\n");
+    printf("[2] Meia-entrada\n");
+    scanf("%d", &ig);
+        switch (ig) {
+            case 1:
+                valor_bilhetes = valor_int;
+                break;
+            case 2:
+                valor_bilhetes = valor_meia;
+                break;
+            default:
+                printf("Opcao invalida!");
+                getchar();
+                break;
+        }
     printf("Digite a quantidade de ingressos (Ex: 2, 3...):\n");
     scanf("%d", &quant_bilhetes);
-    printf("================================================\n");
-    printf("Selecione a sessao desejada:\n");
-    if (nome_filme == "A Bela e a Fera")
+
+    if (quant_bilhetes > quant_bilhetes_MAX)
     {
-        printf("[1] Sessao 1 - Sala 2 15:00 Leg.\n");
-        printf("[2] Sessao 2 - Sala 2 16:00 3D Dub.\n");
-        printf("[3] Sessao 3 - Sala 3 15:30 Dub.\n");
-    }
-    else if (nome_filme == "O Magico de OZ")
+        printf("Essa quantidade de bilhetes nao esta disponivel no momento!\n");
+        printf("\t[1] Retornar ao menu\n");
+        scanf("%d", &rt);
+        switch (rt) {
+            case 1:
+                menu();
+                break;
+            default:
+                printf("Opcao invalida!");
+                getchar();
+                break;
+        }
+        getchar();
+    }else
     {
-        printf("[1] Sessao 1 - Sala 2 14:00 Leg.\n");
-        printf("[2] Sessao 2 - Sala 2 15:00 3D Dub.\n");
-        printf("[3] Sessao 3 - Sala 3 14:30 Dub.\n");
-    }
-    else
-    {
-        printf("[1] Sessao 1 - Sala 2 14:00 Leg.\n");
-        printf("[2] Sessao 2 - Sala 2 16:00 3D Dub.\n");
-        printf("[3] Sessao 3 - Sala 3 17:30 Dub.\n");
-    }
-    
-    
-    scanf("%d", &horario_sessao);
-    printf("================================================\n");
-    printf("Confirme as informacoes abaixo:\n");
-    printf("Quantidade de ingressos: %d\n", quant_bilhetes);
-    printf("Sessao selecionada: %d\n", horario_sessao);
-    printf("\t[1] Confirmar compra\n");
-    printf("\t[2] Retornar ao menu\n");
-    printf("================================================\n");
-    scanf("%d", &cc);
-    switch (cc) {
-        case 1:
-            pagamento(nome_filme);
-            break;
-        case 2:
-            menu();
-            break;
-        default:
-            printf("Opção inválida!");
-            getchar();
-            break;
-    }
-    getchar();
+        printf("================================================\n");
+        printf("Selecione a sessao desejada:\n");
+        if (nome_filme == "A Bela e a Fera") {
+            printf("[1] Sessao 1 - Sala 2 15:00 Leg.\n");
+            printf("[2] Sessao 2 - Sala 2 16:00 3D Dub.\n");
+            printf("[3] Sessao 3 - Sala 3 15:30 Dub.\n");
+        }
+        else if (nome_filme == "O Magico de OZ") {
+            printf("[1] Sessao 1 - Sala 2 14:00 Leg.\n");
+            printf("[2] Sessao 2 - Sala 2 15:00 3D Dub.\n");
+            printf("[3] Sessao 3 - Sala 3 14:30 Dub.\n");
+        }
+        else {
+            printf("[1] Sessao 1 - Sala 2 14:00 Leg.\n");
+            printf("[2] Sessao 2 - Sala 2 16:00 3D Dub.\n");
+            printf("[3] Sessao 3 - Sala 3 17:30 Dub.\n");
+        }
+ 
+        scanf("%d", &horario_sessao);
+        printf("================================================\n");
+        printf("Confirme as informacoes abaixo:\n");
+        printf("Quantidade de ingressos: %d\n", quant_bilhetes);
+        printf("Sessao selecionada: %d\n", horario_sessao);
+        printf("\t[1] Confirmar compra\n");
+        printf("\t[2] Retornar ao menu\n");
+        printf("================================================\n");
+        scanf("%d", &cc);
+        switch (cc) {
+            case 1:
+                pagamento(nome_filme);
+                break;
+            case 2:
+                menu();
+                break;
+            default:
+                printf("Opcao invalida!");
+                getchar();
+                break;
+        }
+    } 
 }
 
 void pagamento(nome_filme){
+    int valor_final = quant_bilhetes * valor_bilhetes;
+
     system("cls");
     printf("================================================\n");
     printf("Digite seu nome: \n");
     scanf ("%s", nome);
+    printf("Valor final de sua compra: %d\n", valor_final);
     printf("Selecione a forma de pagamento: \n");
     printf("\t[1] Cartao de debito\n");
     printf("\t[2] Cartao de credito\n");
@@ -227,26 +266,26 @@ void pagamento(nome_filme){
     scanf("%d", &FP);
     switch (FP) {
         case 1:
-            imprimir(nome, FP, nome_filme);
+            imprimir(nome, FP, nome_filme, valor_final);
             break;
         case 2:
-            imprimir(nome, FP, nome_filme);
+            imprimir(nome, FP, nome_filme, valor_final);
             break;
         case 3:
-            imprimir(nome, FP, nome_filme);
+            imprimir(nome, FP, nome_filme, valor_final);
             break;
         case 4:
-            imprimir(nome, FP, nome_filme);
+            imprimir(nome, FP, nome_filme, valor_final);
             break;
         default:
-            printf("Opção inválida!");
+            printf("Opcao invalida!");
             getchar();
             break;
     }
     getchar();
 }
 
-void imprimir(nome, FP, nome_filme) {
+void imprimir(nome, FP, nome_filme, valor_final) {
     int cf;
 
     system("cls");
@@ -257,25 +296,26 @@ void imprimir(nome, FP, nome_filme) {
     printf("Nome do filme: %s\n", nome_filme);
     printf("Quantidade de bilhetes: %d\n", quant_bilhetes);
     printf("Sessao: %d\n", horario_sessao);
+    printf("Valor: %d\n", valor_final);
     printf("\t[1] Sim\n");
     printf("\t[2] Nao\n");
     scanf("%d", &cf);
     printf("================================================\n");
     switch (cf) {
         case 1:
-            gerar(nome, nome_filme, quant_bilhetes, horario_sessao);
+            gerar(nome, nome_filme, quant_bilhetes, horario_sessao, valor_final);
             break;
         case 2:
             menu();
             break;
         default:
-            printf("Opção inválida!");
+            printf("Opcao invalida!");
             getchar();
             break;
     }
 }
 
-void gerar(nome, nome_filme, quant_bilhetes, horario_sessao) {
+void gerar(nome, nome_filme, quant_bilhetes, horario_sessao, valor_final) {
     system("cls");
     printf("|-------------------------------------->>\n");
     printf("| \tINGRESSO DIGITAL\n");
@@ -283,6 +323,7 @@ void gerar(nome, nome_filme, quant_bilhetes, horario_sessao) {
     printf("| \tFILME:  %s\n", nome_filme);
     printf("| \tBILHETE(S):  %d\n", quant_bilhetes);
     printf("| \tSESSAO:  %d\n", horario_sessao);
+    printf("| \tVALOR:  %d\n", valor_final);
     printf("|-------------------------------------->>\n");
 
     getchar();
