@@ -11,7 +11,9 @@ int valor_final;
 int valor_bilhetes;
 int horario_sessao;
 int FP;
-char nome[15];
+char nome[];
+char *linha;
+size_t len= 100; // valor arbitrário
 
 void menu();
 void filme();
@@ -24,9 +26,9 @@ void geracao();
 int main(void) {
     menu();
     setlocale(LC_ALL, "");
+
     return 0;
 }
-
 // Função de menu, responsável por disponibilizar os filmes disponíveis e encaminha
 // o código de cada filme como parâmetro para a próxima função.
 void menu() {
@@ -75,9 +77,17 @@ void filme(codigo_filme) {
         geracao();
         printf("Nome: %s\n", nome_filme);
         printf("\nSinopse:\n");
-        printf("Esta e a historia de Bela, uma jovem destemida que, em troca da liberdade do pai,\n");
-        printf("oferece a sua companhia a um ser monstruoso que vive num castelo enfeiticado. O que ela mais tarde vem a perceber e que,\n");
-        printf("debaixo da sua estranha aparencia, ele e na realidade um principe sob uma maldicao...\n");
+        
+        FILE *f= fopen("ingresso.txt", "r");
+        linha= malloc(len);
+        while (getline(&linha, &len, f) > 0)
+        {
+            printf("%s", linha);
+            break;
+        }
+        if (linha)
+            free(linha);
+        fclose(f);
         geracao();
         printf("\t[1] Comprar ingresso\n");
         printf("\t[2] Retornar ao menu\n");
@@ -104,9 +114,18 @@ void filme(codigo_filme) {
         geracao();
         printf("Nome: %s\n", nome_filme);
         printf("\nSinopse:\n");
-        printf("Dorothy e seu cachorro Toto sao levados para a terra magica de Oz quando um ciclone passa pela fazenda de seus avos no Kansas.\n");
-        printf("Eles viajam em direcao a Cidade Esmeralda para encontrar o Mago Oz e no caminho encontram um Espantalho, que precisa de um cerebro,\n");
-        printf("um Homem de Lata sem um coracao e um Leao Covarde que quer coragem....\n");
+        FILE *f= fopen("ingresso.txt", "r");
+        linha= malloc(len);
+        while (getline(&linha, &len, f) > 1)
+        {
+            printf("%s", linha);
+        }
+        if (linha)
+            free(linha);
+        fclose(f);
+        // printf("Dorothy e seu cachorro Toto sao levados para a terra magica de Oz quando um ciclone passa pela fazenda de seus avos no Kansas.\n");
+        // printf("Eles viajam em direcao a Cidade Esmeralda para encontrar o Mago Oz e no caminho encontram um Espantalho, que precisa de um cerebro,\n");
+        // printf("um Homem de Lata sem um coracao e um Leao Covarde que quer coragem....\n");
         geracao();
         printf("\t[1] Comprar ingresso\n");
         printf("\t[2] Retornar ao menu\n");
@@ -289,29 +308,11 @@ void pagamento(nome_filme){
 // nome do filme e o valor final da compra.
 void imprimir(nome, FP, nome_filme, valor_final) {
     int cf;
-
-    // if (FP = 1)
-    // {
-    //     char Pag[61] = "Cartao de debito";
-    // }
-    // else if (FP = 2)
-    // {
-    //     char Pag[61] = "Cartao de credito";
-    // }
-    // else if (FP = 3)
-    // {
-    //     char Pag[61] = "Dinheiro (cedula)";
-    // }
-    // else if (FP = 4)
-    // {
-    //     char Pag[61] = "Pix";;
-    // }
     
     system("cls");
     geracao();
     printf("Confirme as informacoes abaixo: \n");
     printf("Nome: %s\n", nome);
-    printf("Forma de pagamento: %s\n", FP);
     printf("Nome do filme: %s\n", nome_filme);
     printf("Quantidade de bilhetes: %d\n", quant_bilhetes);
     printf("Sessao: %d\n", horario_sessao);
