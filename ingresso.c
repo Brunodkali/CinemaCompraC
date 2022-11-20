@@ -12,11 +12,11 @@ int valor_bilhetes;
 int horario_sessao;
 int FP;
 char nome[];
-char *linha;
-size_t len= 100; // valor arbitrário
+char *result;
+char linha[500];
 
+int filme(int codigo_filme);
 void menu();
-void filme();
 void pagamento();
 void imprimir();
 void gerar();
@@ -48,46 +48,50 @@ void menu() {
     scanf("%d", &op);
     switch (op) {
         case 1:
-            filme(codigo_filme=1);
+            filme(codigo_filme=0);
             break;
         case 2:
-            filme(codigo_filme=2);
+            filme(codigo_filme=1);
             break;
         case 3:
-            filme(codigo_filme=3);
+            filme(codigo_filme=2);
+            break;
+        case 0:
+            exit;
             break;
         default:
             printf("Opcao invalida!");
             getchar();
             break;
     }
-    return;
+    return 0;
 }
 
 // Função que disponibiliza informações referentes ao filme selecionado.
 // Recebe como parâmetros o código do filme selecionado.
-void filme(codigo_filme) {
+int filme(int codigo_filme) {
     int ci;
+    int codigo = 0;
+
+    FILE *arq = fopen("ingresso.txt", "rt");
+    if (arq == NULL) {
+        printf("Problemas na abertura do arquivo\n");
+        return 0;
+    }
 
     system("cls");
-    if (codigo_filme == 1)
-    {
+    if (codigo_filme == 0) {
         char nome_filme[61] = "A Bela e a Fera";
 
         geracao();
         printf("Nome: %s\n", nome_filme);
-        printf("\nSinopse:\n");
-        
-        FILE *f= fopen("ingresso.txt", "r");
-        linha= malloc(len);
-        while (getline(&linha, &len, f) > 0)
-        {
-            printf("%s", linha);
-            break;
+        while (!feof(arq)) {
+            result = fgets(linha, 500, arq);
+            if (codigo == codigo_filme) 
+            printf("\nSinopse: %s\n", linha);
+            codigo++;
         }
-        if (linha)
-            free(linha);
-        fclose(f);
+        fclose(arq);
         geracao();
         printf("\t[1] Comprar ingresso\n");
         printf("\t[2] Retornar ao menu\n");
@@ -107,25 +111,18 @@ void filme(codigo_filme) {
         geracao();
         getchar();
     }
-    else if (codigo_filme == 2)
-    {
+    else if (codigo_filme == 1) {
         char nome_filme[61] = "O magico de OZ";
 
         geracao();
         printf("Nome: %s\n", nome_filme);
-        printf("\nSinopse:\n");
-        FILE *f= fopen("ingresso.txt", "r");
-        linha= malloc(len);
-        while (getline(&linha, &len, f) > 1)
-        {
-            printf("%s", linha);
+        while (!feof(arq)) {
+            result = fgets(linha, 500, arq);
+            if (codigo == codigo_filme) 
+            printf("\nSinopse: %s\n", linha);
+            codigo++;
         }
-        if (linha)
-            free(linha);
-        fclose(f);
-        // printf("Dorothy e seu cachorro Toto sao levados para a terra magica de Oz quando um ciclone passa pela fazenda de seus avos no Kansas.\n");
-        // printf("Eles viajam em direcao a Cidade Esmeralda para encontrar o Mago Oz e no caminho encontram um Espantalho, que precisa de um cerebro,\n");
-        // printf("um Homem de Lata sem um coracao e um Leao Covarde que quer coragem....\n");
+        fclose(arq);
         geracao();
         printf("\t[1] Comprar ingresso\n");
         printf("\t[2] Retornar ao menu\n");
@@ -145,16 +142,18 @@ void filme(codigo_filme) {
         geracao();
         getchar();
     }
-    else if (codigo_filme == 3)
-    {
+    else if (codigo_filme == 2) {
         char nome_filme[61] = "Se eu fosse voce 2";
 
         geracao();
         printf("Nome: %s\n", nome_filme);
-        printf("\nSinopse:\n");
-        printf("Claudio e Helena estao prestes a se separar. Durante uma discussao, \n");
-        printf("eles trocam de corpos mais uma vez e sao obrigados a viver a vida do outro.\n");
-        printf("Para complicar ainda mais a situacao, a filha do casal esta gravida e nao sabe como contar aos pais...\n");
+        while (!feof(arq)) {
+            result = fgets(linha, 500, arq);
+            if (codigo == codigo_filme) 
+            printf("\nSinopse: %s\n", linha);
+            codigo++;
+        }
+        fclose(arq);
         geracao();
         printf("\t[1] Comprar ingresso\n");
         printf("\t[2] Retornar ao menu\n");
@@ -174,7 +173,7 @@ void filme(codigo_filme) {
         geracao();
         getchar();
     }
-    return;
+    return 0;
 }
 
 // Função que permite a seleção de ingressos, quantidades e sessão desejada.
@@ -261,7 +260,7 @@ void comprar(nome_filme, codigo_filme) {
                 break;
         }
     }
-    return;
+    return 0;
 }
 
 // Função que permite a seleção da forma de pagamento e imprime o valor final da compra.
@@ -300,7 +299,7 @@ void pagamento(nome_filme){
             break;
     }
     getchar();
-    return;
+    return 0;
 }
 
 // Função que permite confirmar as informações ou retonar ao menu.
@@ -333,7 +332,7 @@ void imprimir(nome, FP, nome_filme, valor_final) {
             getchar();
             break;
     }
-    return;
+    return 0;
 }
 
 // Função que recebe como parâmetro o nome do usuário, nome do filme, quantidade de bilhetes,
@@ -348,11 +347,12 @@ void gerar(nome, nome_filme, quant_bilhetes, horario_sessao, valor_final) {
     printf("| \tSESSAO:  %d\n", horario_sessao);
     printf("| \tVALOR:  %d\n", valor_final);
     printf("|-------------------------------------->>\n"); 
-    return;
+    exit;
+    return 0;
 }
 
 // Workaround para gerar conteúdo visual
 void geracao() {
     printf("================================================\n");
-    return;
+    return 0;
 }
