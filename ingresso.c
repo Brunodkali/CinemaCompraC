@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <Windows.h>
 #define quant_bilhetes_MAX 10
 #define valor_int 24
 #define valor_meia 12
@@ -29,10 +31,13 @@ int main(void) {
 
     return 0;
 }
+
 // Função de menu, responsável por disponibilizar os filmes disponíveis e encaminha
 // o código de cada filme como parâmetro para a próxima função.
-void menu() {
-    int op;
+void menu() {    
+    float ftaux;
+    int auxInt;
+    char auxText[3];
 
     system("cls");
     geracao();
@@ -43,35 +48,42 @@ void menu() {
     printf("\t[1] | A Bela e a Fera\n");
     printf("\t[2] | O Magico de OZ\n");
     printf("\t[3] | Se eu fosse voce 2\n");
-    printf("\t[0] | Sair\n");
+    printf("\t[4] | Sair\n");
     geracao();
-    scanf("%d", &op);
-    switch (op) {
-        case 1:
-            filme(codigo_filme=0);
-            break;
-        case 2:
-            filme(codigo_filme=1);
-            break;
-        case 3:
-            filme(codigo_filme=2);
-            break;
-        case 0:
-            exit;
-            break;
-        default:
-            printf("Opcao invalida!");
-            getchar();
-            break;
+    scanf("%s", &auxText);
+    ftaux = atof(auxText);
+    auxInt = ftaux;
+    if (auxInt == ftaux) {
+        switch (auxInt) {
+            case 1:
+                filme(codigo_filme=0);
+                break;
+            case 2:
+                filme(codigo_filme=1);
+                break;
+            case 3:
+                filme(codigo_filme=2);
+                break;
+            case 4:
+                exit;
+                break;
+            default:
+                menu();
+                printf("A opcao digitada nao e valida!");
+                break;
+        }
+    }else {
+        printf("A opcao digitada nao e valida!");
+        Sleep(1200);
+        menu();
     }
-    return 0;
 }
 
 // Função que disponibiliza informações referentes ao filme selecionado.
 // Recebe como parâmetros o código do filme selecionado.
 int filme(int codigo_filme) {
-    int ci;
     int codigo = 0;
+    int auxText;
 
     FILE *arq = fopen("ingresso.txt", "rt");
     if (arq == NULL) {
@@ -93,10 +105,11 @@ int filme(int codigo_filme) {
         }
         fclose(arq);
         geracao();
+
         printf("\t[1] Comprar ingresso\n");
         printf("\t[2] Retornar ao menu\n");
-        scanf("%d", &ci);
-        switch (ci) {
+        scanf("%d", &auxText);
+        switch (auxText) {
             case 1:
                 comprar(nome_filme, codigo_filme);
                 break;
@@ -106,10 +119,9 @@ int filme(int codigo_filme) {
             default:
                 printf("Opcao invalida!\n");
                 getchar();
+                menu();
                 break;
         }
-        geracao();
-        getchar();
     }
     else if (codigo_filme == 1) {
         char nome_filme[61] = "O magico de OZ";
@@ -126,8 +138,8 @@ int filme(int codigo_filme) {
         geracao();
         printf("\t[1] Comprar ingresso\n");
         printf("\t[2] Retornar ao menu\n");
-        scanf("%d", &ci);
-        switch (ci) {
+        scanf("%d", &auxText);
+        switch (auxText) {
             case 1:
                 comprar(nome_filme, codigo_filme);
                 break;
@@ -157,8 +169,8 @@ int filme(int codigo_filme) {
         geracao();
         printf("\t[1] Comprar ingresso\n");
         printf("\t[2] Retornar ao menu\n");
-        scanf("%d", &ci);
-        switch (ci) {
+        scanf("%d", &auxText);
+        switch (auxText) {
             case 1:
                 comprar(nome_filme, codigo_filme);
                 break;
@@ -188,6 +200,7 @@ void comprar(nome_filme, codigo_filme) {
     printf("Selecione se o ingresso e inteiro ou meia-entrada: \n");
     printf("[1] Inteiro\n");
     printf("[2] Meia-entrada\n");
+    printf("[3] Retornar ao menu\n");
     scanf("%d", &ig);
         switch (ig) {
             case 1:
@@ -195,6 +208,9 @@ void comprar(nome_filme, codigo_filme) {
                 break;
             case 2:
                 valor_bilhetes = valor_meia;
+                break;
+            case 3:
+                menu();
                 break;
             default:
                 comprar();
@@ -346,7 +362,8 @@ void gerar(nome, nome_filme, quant_bilhetes, horario_sessao, valor_final) {
     printf("| \tBILHETE(S):  %d\n", quant_bilhetes);
     printf("| \tSESSAO:  %d\n", horario_sessao);
     printf("| \tVALOR:  %d\n", valor_final);
-    printf("|-------------------------------------->>\n"); 
+    printf("|-------------------------------------->>\n");
+    getchar();
     exit;
     return 0;
 }
