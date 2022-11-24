@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <locale.h>
 #include <Windows.h>
 #define quant_bilhetes_MAX 10
@@ -12,8 +12,10 @@ int quant_bilhetes;
 int valor_final;
 int valor_bilhetes;
 int horario_sessao;
-int FP;
-char nome[];
+int fp;
+char filme_disponivel[][20] = {"A Bela e a Fera", "O Magico de OZ", "Se eu fosse voce 2"};
+char filme_disponivel_menu[][200] = {"\t[1] | A Bela e a Fera\n", "\t[2] | O Magico de OZ\n", "\t[3] | Se eu fosse voce 2\n", "\t[4] | Sair\n"};
+char nome[15];
 char *result;
 char linha[500];
 
@@ -35,8 +37,9 @@ int main(void) {
 // Função de menu, responsável por disponibilizar os filmes disponíveis e encaminha
 // o código de cada filme como parâmetro para a próxima função.
 void menu() {    
-    float ftaux;
     int auxInt;
+    int cont;
+    float ftaux;
     char auxText[3];
 
     system("cls");
@@ -45,10 +48,11 @@ void menu() {
     geracao();
     printf("\tSELECIONE UMA DAS OPCOES ABAIXO:\n\n");
     printf("\t |--> FILMES EM CARTAZ <--| \n\n");
-    printf("\t[1] | A Bela e a Fera\n");
-    printf("\t[2] | O Magico de OZ\n");
-    printf("\t[3] | Se eu fosse voce 2\n");
-    printf("\t[4] | Sair\n");
+
+    for (cont = 0; cont < 4; cont++) {
+        printf("%s", filme_disponivel_menu[cont]);
+    }
+
     geracao();
     scanf("%s", &auxText);
     ftaux = atof(auxText);
@@ -56,20 +60,19 @@ void menu() {
     if (auxInt == ftaux) {
         switch (auxInt) {
             case 1:
-                filme(codigo_filme=0);
+                filme(codigo_filme = 0);
                 break;
             case 2:
-                filme(codigo_filme=1);
+                filme(codigo_filme = 1);
                 break;
             case 3:
-                filme(codigo_filme=2);
+                filme(codigo_filme = 2);
                 break;
             case 4:
-                exit;
+                exit(0);
                 break;
             default:
                 menu();
-                printf("A opcao digitada nao e valida!");
                 break;
         }
     }else {
@@ -77,6 +80,7 @@ void menu() {
         Sleep(1200);
         menu();
     }
+    return 0;
 }
 
 // Função que disponibiliza informações referentes ao filme selecionado.
@@ -84,8 +88,10 @@ void menu() {
 int filme(int codigo_filme) {
     int codigo = 0;
     int auxText;
+    char *nome_filme;
+    char *filme;
 
-    FILE *arq = fopen("ingresso.txt", "rt");
+    FILE *arq = fopen("sinopses.txt", "rt");
     if (arq == NULL) {
         printf("Problemas na abertura do arquivo\n");
         return 0;
@@ -93,10 +99,10 @@ int filme(int codigo_filme) {
 
     system("cls");
     if (codigo_filme == 0) {
-        char nome_filme[61] = "A Bela e a Fera";
-
+        nome_filme = filme_disponivel[0];
+        nome_filme = (char * ) malloc (sizeof(char));
         geracao();
-        printf("Nome: %s\n", nome_filme);
+        printf("Nome: %s\n", filme);
         while (!feof(arq)) {
             result = fgets(linha, 500, arq);
             if (codigo == codigo_filme) 
@@ -124,7 +130,7 @@ int filme(int codigo_filme) {
         }
     }
     else if (codigo_filme == 1) {
-        char nome_filme[61] = "O magico de OZ";
+        nome_filme = filme_disponivel[1];
 
         geracao();
         printf("Nome: %s\n", nome_filme);
@@ -155,7 +161,7 @@ int filme(int codigo_filme) {
         getchar();
     }
     else if (codigo_filme == 2) {
-        char nome_filme[61] = "Se eu fosse voce 2";
+        nome_filme = filme_disponivel[2];
 
         geracao();
         printf("Nome: %s\n", nome_filme);
@@ -217,16 +223,19 @@ void comprar(nome_filme, codigo_filme) {
                 break;
         }
     printf("Digite a quantidade de ingressos (Ex: 2, 3...):\n");
-    scanf("%d", &quant_bilhetes);
+    scanf("%d", &quant_bilhetes); 
 
-    if (quant_bilhetes > quant_bilhetes_MAX)
-    {
-        printf("Essa quantidade de bilhetes nao esta disponivel no momento!\n");
-        printf("\t[1] Retornar ao menu\n");
+    if (quant_bilhetes > quant_bilhetes_MAX) {
+        printf("Essa quantidade ultrapassa a quantidade de bilhetes disponiveis: %d\n", quant_bilhetes_MAX);
+        printf("[1] Retornar ao menu\n");
+        printf("[2] Continuar a compra\n");
         scanf("%d", &rt);
         switch (rt) {
             case 1:
                 menu();
+                break;      
+            case 2:
+                comprar();
                 break;
             default:
                 printf("Opcao invalida!\n");
@@ -295,19 +304,19 @@ void pagamento(nome_filme){
     printf("\t[3] Dinheiro (cedulas)\n");
     printf("\t[4] Pix\n");
     geracao();
-    scanf("%d", &FP);
-    switch (FP) {
+    scanf("%d", &fp);
+    switch (fp) {
         case 1:
-            imprimir(nome, FP, nome_filme, valor_final);
+            imprimir(nome, fp, nome_filme, valor_final);
             break;
         case 2:
-            imprimir(nome, FP, nome_filme, valor_final);
+            imprimir(nome, fp, nome_filme, valor_final);
             break;
         case 3:
-            imprimir(nome, FP, nome_filme, valor_final);
+            imprimir(nome, fp, nome_filme, valor_final);
             break;
         case 4:
-            imprimir(nome, FP, nome_filme, valor_final);
+            imprimir(nome, fp, nome_filme, valor_final);
             break;
         default:
             printf("Opcao invalida!\n");
@@ -321,7 +330,7 @@ void pagamento(nome_filme){
 // Função que permite confirmar as informações ou retonar ao menu.
 // Recebe como parâmetros o nome do usuário, forma de pagamento selecionada,
 // nome do filme e o valor final da compra.
-void imprimir(nome, FP, nome_filme, valor_final) {
+void imprimir(nome, fp, nome_filme, valor_final) {
     int cf;
     
     system("cls");
@@ -354,6 +363,9 @@ void imprimir(nome, FP, nome_filme, valor_final) {
 // Função que recebe como parâmetro o nome do usuário, nome do filme, quantidade de bilhetes,
 // sessão selecionada e valor final a ser pago.
 void gerar(nome, nome_filme, quant_bilhetes, horario_sessao, valor_final) {
+    char ingresso[] = {"ingressoDigital.txt"};
+    FILE *file = fopen(ingresso, "w");
+
     system("cls");
     printf("|-------------------------------------->>\n");
     printf("| \tINGRESSO DIGITAL\n"); 
@@ -363,8 +375,23 @@ void gerar(nome, nome_filme, quant_bilhetes, horario_sessao, valor_final) {
     printf("| \tSESSAO:  %d\n", horario_sessao);
     printf("| \tVALOR:  %d\n", valor_final);
     printf("|-------------------------------------->>\n");
+
+    if(file) {
+        fprintf(file, "|-------------------------------------->>\n");
+        fprintf(file, "| \tINGRESSO DIGITAL\n"); 
+        fprintf(file, "| \tNOME:  %s\n", nome );
+        fprintf(file, "| \tFILME:  %s\n", nome_filme);
+        fprintf(file, "| \tBILHETE(S):  %d\n", quant_bilhetes);
+        fprintf(file, "| \tSESSAO:  %d\n", horario_sessao);
+        fprintf(file, "| \tVALOR:  %d\n", valor_final);
+        fprintf(file, "|-------------------------------------->>\n");
+        fclose(file);
+        printf("\nIngresso digital gerado!\n");
+    }else {
+        printf("\nERRO ao gerar arquivo!\n");
+    }
     getchar();
-    exit;
+    exit(0);
     return 0;
 }
 
