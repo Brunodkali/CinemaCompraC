@@ -49,7 +49,7 @@ void menu() {
     printf("\tSELECIONE UMA DAS OPCOES ABAIXO:\n\n");
     printf("\t |--> FILMES EM CARTAZ <--| \n\n");
 
-    for (cont = 0; cont < 4; cont++) {
+    for (cont = 0; cont < 5; cont++) {
         printf("%s", filme_disponivel_menu[cont]);
     }
 
@@ -89,9 +89,8 @@ int filme(int codigo_filme) {
     int codigo = 0;
     int auxText;
     char *nome_filme;
-    char *filme;
-
     FILE *arq = fopen("sinopses.txt", "rt");
+
     if (arq == NULL) {
         printf("Problemas na abertura do arquivo\n");
         return 0;
@@ -100,9 +99,10 @@ int filme(int codigo_filme) {
     system("cls");
     if (codigo_filme == 0) {
         nome_filme = filme_disponivel[0];
-        nome_filme = (char * ) malloc (sizeof(char));
+        
         geracao();
-        printf("Nome: %s\n", filme);
+
+        printf("Nome: %s\n", nome_filme);
         while (!feof(arq)) {
             result = fgets(linha, 500, arq);
             if (codigo == codigo_filme) 
@@ -110,6 +110,7 @@ int filme(int codigo_filme) {
             codigo++;
         }
         fclose(arq);
+
         geracao();
 
         printf("\t[1] Comprar ingresso\n");
@@ -133,6 +134,7 @@ int filme(int codigo_filme) {
         nome_filme = filme_disponivel[1];
 
         geracao();
+
         printf("Nome: %s\n", nome_filme);
         while (!feof(arq)) {
             result = fgets(linha, 500, arq);
@@ -141,7 +143,9 @@ int filme(int codigo_filme) {
             codigo++;
         }
         fclose(arq);
+
         geracao();
+
         printf("\t[1] Comprar ingresso\n");
         printf("\t[2] Retornar ao menu\n");
         scanf("%d", &auxText);
@@ -164,6 +168,7 @@ int filme(int codigo_filme) {
         nome_filme = filme_disponivel[2];
 
         geracao();
+
         printf("Nome: %s\n", nome_filme);
         while (!feof(arq)) {
             result = fgets(linha, 500, arq);
@@ -172,7 +177,9 @@ int filme(int codigo_filme) {
             codigo++;
         }
         fclose(arq);
+
         geracao();
+
         printf("\t[1] Comprar ingresso\n");
         printf("\t[2] Retornar ao menu\n");
         scanf("%d", &auxText);
@@ -222,30 +229,27 @@ void comprar(nome_filme, codigo_filme) {
                 comprar();
                 break;
         }
+    system("cls");
     printf("Digite a quantidade de ingressos (Ex: 2, 3...):\n");
     scanf("%d", &quant_bilhetes); 
 
     if (quant_bilhetes > quant_bilhetes_MAX) {
         printf("Essa quantidade ultrapassa a quantidade de bilhetes disponiveis: %d\n", quant_bilhetes_MAX);
         printf("[1] Retornar ao menu\n");
-        printf("[2] Continuar a compra\n");
         scanf("%d", &rt);
         switch (rt) {
             case 1:
                 menu();
                 break;      
-            case 2:
-                comprar();
-                break;
             default:
                 printf("Opcao invalida!\n");
-                getchar();
+                Sleep(1000);
+                menu();
                 break;
         }
-        getchar();
-    }else
-    { 
+    }else { 
         geracao();
+
         printf("Selecione a sessao desejada:\n");
         if (codigo_filme == 1) {
             printf("[1] Sessao 1 - Sala 2 15:00 Leg.\n");
@@ -256,21 +260,23 @@ void comprar(nome_filme, codigo_filme) {
             printf("[1] Sessao 1 - Sala 2 14:00 Leg.\n");
             printf("[2] Sessao 2 - Sala 2 15:00 3D Dub.\n");
             printf("[3] Sessao 3 - Sala 3 14:30 Dub.\n");
-        }
-        else {
+        }else {
             printf("[1] Sessao 1 - Sala 2 14:00 Leg.\n");
             printf("[2] Sessao 2 - Sala 2 16:00 3D Dub.\n");
             printf("[3] Sessao 3 - Sala 3 17:30 Dub.\n");
         }
- 
         scanf("%d", &horario_sessao);
+
         geracao();
+
         printf("Confirme as informacoes abaixo:\n");
         printf("Quantidade de ingressos: %d\n", quant_bilhetes);
         printf("Sessao selecionada: %d\n", horario_sessao);
         printf("\t[1] Confirmar compra\n");
         printf("\t[2] Retornar ao menu\n");
+
         geracao();
+
         scanf("%d", &cc);
         switch (cc) {
             case 1:
@@ -303,7 +309,9 @@ void pagamento(nome_filme){
     printf("\t[2] Cartao de credito\n");
     printf("\t[3] Dinheiro (cedulas)\n");
     printf("\t[4] Pix\n");
+
     geracao();
+
     scanf("%d", &fp);
     switch (fp) {
         case 1:
@@ -334,7 +342,9 @@ void imprimir(nome, fp, nome_filme, valor_final) {
     int cf;
     
     system("cls");
+
     geracao();
+
     printf("Confirme as informacoes abaixo: \n");
     printf("Nome: %s\n", nome);
     printf("Nome do filme: %s\n", nome_filme);
@@ -344,7 +354,9 @@ void imprimir(nome, fp, nome_filme, valor_final) {
     printf("\t[1] Sim\n");
     printf("\t[2] Nao\n");
     scanf("%d", &cf);
+
     geracao();
+
     switch (cf) {
         case 1:
             gerar(nome, nome_filme, quant_bilhetes, horario_sessao, valor_final);
