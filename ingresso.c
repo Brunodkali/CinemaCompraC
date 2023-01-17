@@ -26,7 +26,7 @@ void imprimir();
 void gerar();
 void geracao();
 
-//  Função main, responsável por iniciar o software.
+// Função main, responsável por iniciar o software.
 int main(void) {
     menu();
     setlocale(LC_ALL, "");
@@ -37,49 +37,41 @@ int main(void) {
 // Função de menu, responsável por disponibilizar os filmes disponíveis e encaminha
 // o código de cada filme como parâmetro para a próxima função.
 void menu() {    
-    int auxInt;
     int cont;
-    float ftaux;
-    char auxText[3];
+    char auxText;
 
-    system("cls");
-    geracao();
-    printf("\t\tCinema da Cidade\n");
-    geracao();
-    printf("\tSELECIONE UMA DAS OPCOES ABAIXO:\n\n");
-    printf("\t |--> FILMES EM CARTAZ <--| \n\n");
+    do {
+        system("cls");
+        geracao();
+        printf("\t\Teatro da Cidade\n");
+        geracao();
+        printf("\tSELECIONE UMA DAS OPCOES ABAIXO:\n\n");
+        printf("\t |--> ESPETACULOS EM CARTAZ <--| \n\n");
 
-    for (cont = 0; cont < 5; cont++) {
-        printf("%s", filme_disponivel_menu[cont]);
-    }
+        for (cont = 0; cont < 5; cont++) {
+            printf("%s", filme_disponivel_menu[cont]);
+        }
 
-    geracao();
-    scanf("%s", &auxText);
-    ftaux = atof(auxText);
-    auxInt = ftaux;
-    if (auxInt == ftaux) {
-        switch (auxInt) {
-            case 1:
+        scanf("%c", &auxText);
+
+        switch (auxText) {
+            case '1':
                 filme(codigo_filme = 0);
                 break;
-            case 2:
+            case '2':
                 filme(codigo_filme = 1);
                 break;
-            case 3:
+            case '3':
                 filme(codigo_filme = 2);
                 break;
-            case 4:
+            case '4':
                 exit(0);
                 break;
             default:
-                menu();
                 break;
-        }
-    }else {
-        printf("A opcao digitada nao e valida!");
-        Sleep(1200);
-        menu();
-    }
+       }
+    } while (auxText != '4');
+
     return 0;
 }
 
@@ -89,7 +81,7 @@ int filme(int codigo_filme) {
     int codigo = 0;
     int auxText;
     char *nome_filme;
-    FILE *arq = fopen("sinopses.txt", "rt");
+    FILE *arq = fopen("sinopses/sinopses.txt", "rt");
 
     if (arq == NULL) {
         printf("Problemas na abertura do arquivo\n");
@@ -368,14 +360,13 @@ void imprimir(nome, fp, nome_filme, valor_final) {
             printf("Opcao invalida!\n");
             getchar();
             break;
-    }
-    return 0;
+    }  
 }
 
 // Função que recebe como parâmetro o nome do usuário, nome do filme, quantidade de bilhetes,
 // sessão selecionada e valor final a ser pago.
 void gerar(nome, nome_filme, quant_bilhetes, horario_sessao, valor_final) {
-    char ingresso[] = {"ingressoDigital.txt"};
+    char ingresso[] = { "ingressoDigital.txt" };
     FILE *file = fopen(ingresso, "w");
 
     system("cls");
@@ -410,5 +401,5 @@ void gerar(nome, nome_filme, quant_bilhetes, horario_sessao, valor_final) {
 // Workaround para gerar conteúdo visual
 void geracao() {
     printf("================================================\n");
-    return 0;
+    return;
 }
